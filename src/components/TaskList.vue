@@ -1,26 +1,27 @@
 <template>
-  <div class="task-list">
-    <TaskInput />
+  <div>
+    <div>
+      <button @click="filter = 'all'">Все</button>
+      <button @click="filter = 'completed'">Выполненные</button>
+      <button @click="filter = 'uncompleted'">Невыполненные</button>
+    </div>
+    <ul>
+      <TaskItem v-for="task in filteredTasks" :key="task.id" :task="task" />
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import TaskInput from "./TaskInput.vue";
+import { ref, computed } from 'vue';
+import { useTodoStore } from '../stores/taskItemStore.ts';
+import TaskItem from './TaskItem.vue';
+
+const filter = ref<'all' | 'completed' | 'uncompleted'>('all');
+const todoStore = useTodoStore();
+
+const filteredTasks = computed(() => {
+  if (filter.value === 'completed') return todoStore.completedTasks;
+  if (filter.value === 'uncompleted') return todoStore.uncompletedTasks;
+  return todoStore.tasks;
+});
 </script>
-
-
-
-
-
-
-<style scoped>
-  .task-list{
-    display: flex;
-    flex-direction: column;
-    width: 700px;
-    height: 400px;
-    background: rgba(128, 128, 128, 0.3);
-    border: 3px solid rgba(128, 128, 128, 0.5);
-    border-radius: 10px;
-  }
-</style>

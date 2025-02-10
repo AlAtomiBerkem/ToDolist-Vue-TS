@@ -1,39 +1,32 @@
 <template>
-  <div class="task-input">
-    <input class="input"
-        type="text"
-        v-model="input"
-        id="name"
-        name="name"
-        required
-        minlength="1"
-        maxlength="100"
-        placeholder="введите свою задачу"
-    />
-    <p>{{ input }}</p>
-  </div>
+  <form @submit.prevent="addTask">
+    <input v-model="taskText" placeholder="Добавьте задачу" />
+    <button type="submit">Добавить</button>
+    <p v-if="error" class="error">{{ error }}</p>
+  </form>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      input: '' // Инициализируем строку для связывания с элементом ввода
-    };
-  }
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { useTodoStore } from '../stores/taskItemStore.ts';
+
+const taskText = ref('');
+const todoStore = useTodoStore();
+const error = ref('');
+
+watch(() => todoStore.error, (newError) => {
+  error.value = newError;
+});
+
+const addTask = () => {
+  todoStore.addTask(taskText.value);
+  taskText.value = '';
 };
 </script>
 
 <style scoped>
-.input {
-  width: 60%; /* Полная ширина контейнера */
-  padding: 10px; /* Внутренние отступы */
-  margin: 10px 0; /* Внешние отступы */
-  font-size: 16px; /* Размер шрифта */
-  font-family: Arial, sans-serif; /* Шрифт */
-  border-radius: 5px; /* Скругление углов */
-  box-sizing: border-box; /* Включает padding и border в общую ширину */
-  transition: border-color 0.3s ease;
-  background: darkgrey;
+.error {
+  color: red;
+  margin-top: 10px;
 }
 </style>

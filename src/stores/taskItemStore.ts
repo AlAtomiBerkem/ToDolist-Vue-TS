@@ -10,7 +10,7 @@ export const useTodoStore = defineStore('todo', {
     state: () => ({
         tasks: [] as Task[],
         nextId: 1,
-        error: '', // Состояние для ошибки
+        error: '',
     }),
     actions: {
         addTask(text: string) {
@@ -18,7 +18,7 @@ export const useTodoStore = defineStore('todo', {
                 this.error = 'Ошибка: нельзя добавлять пустые задачи';
                 return;
             }
-            this.error = ''; // Очищаем ошибку, если задача не пустая
+            this.error = '';
             this.tasks.push({ id: this.nextId++, text, completed: false });
         },
         removeTask(id: number) {

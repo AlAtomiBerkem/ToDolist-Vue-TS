@@ -13,7 +13,7 @@ export const useTodoStore = defineStore('todo', {
         error: '',
     }),
     actions: {
-        addTask(text: string) {
+        addTask(this: any, text: string) {
             if (!text.trim()) {
                 this.error = 'Ошибка: нельзя добавлять пустые задачи';
                 return;
@@ -21,20 +21,20 @@ export const useTodoStore = defineStore('todo', {
             this.error = '';
             this.tasks.push({ id: this.nextId++, text, completed: false });
         },
-        removeTask(id: number) {
-            this.tasks = this.tasks.filter(task => task.id !== id);
+        removeTask(this: any, id: number) {
+            this.tasks = this.tasks.filter((task: Task) => task.id !== id);
         },
-        toggleTask(id: number) {
-            const task = this.tasks.find(task => task.id === id);
+        toggleTask(this: any, id: number) {
+            const task = this.tasks.find((task: Task) => task.id === id);
             if (task) task.completed = !task.completed;
         },
     },
     getters: {
-        completedTasks(): Task[] {
-            return this.tasks.filter(task => task.completed);
+        completedTasks(state): Task[] {
+            return state.tasks.filter(task => task.completed);
         },
-        uncompletedTasks(): Task[] {
-            return this.tasks.filter(task => !task.completed);
+        uncompletedTasks(state): Task[] {
+            return state.tasks.filter(task => !task.completed);
         },
     },
 });
